@@ -33,8 +33,8 @@ class SanBay(BaseModel):
     name=Column(String(50), nullable=False)
     city=Column(String(50), nullable=False)
     country=Column(String(50), nullable=False)
-    chuyen_bay_co_san_bay_di=relationship('ChuyenBay', backref=backref('san_bay_di'), lazy=True)
-    chuyen_bay_co_san_bay_den=relationship('ChuyenBay', backref=backref('san_bay_den'), lazy=True)
+    chuyen_bay_co_san_bay_di=relationship('ChuyenBay', backref='san_bay_di', lazy=True)
+    chuyen_bay_co_san_bay_den=relationship('ChuyenBay', backref='san_bay_den', lazy=True)
     def __str__(self):
         return self.name
 
@@ -42,7 +42,7 @@ class SanBay(BaseModel):
 class ThoiDiemBay(BaseModel):
     thoi_gian_bay=Column(DateTime, nullable=False)
     thoi_gian_dung=Column(DateTime, nullable=False)
-    chuyenbay=relationship('ChuyenBay', backref=backref('thoi_diem_bay'), lazy=True)
+    chuyenbay=relationship('ChuyenBay', backref='thoi_diem_bay', lazy=True)
     def __str__(self):
         return self.name
 
@@ -61,8 +61,8 @@ class ChuyenBay(BaseModel):
     sanBayDen_id = Column(Integer, ForeignKey(SanBay.id), nullable=False)
     thoiDiemBay_id = Column(Integer, ForeignKey(ThoiDiemBay.id), nullable=False)
     tuyenBay_id = Column(Integer, ForeignKey(TuyenBay.id), nullable=False)
-    ve = relationship('Ve', backref=backref('chuyen_bay', lazy=True))
-    khach_hang = relationship('KhachHang', backref=backref('chuyen_bay'))
+    ve = relationship('Ve', backref='chuyen_bay', lazy=True)
+    khach_hang = relationship('KhachHang', backref='chuyen_bay', lazy=True)
     san_bay_trung_gian = relationship('SanBay', secondary='sb_trunggian', lazy=True, backref=backref('chuyen_bay', lazy=True))
     may_bay=relationship('MayBay', secondary='may_bay_thuoc_chuyen_bay', lazy=True, backref=backref('chuyen_bay', lazy=True))
 
@@ -80,7 +80,7 @@ class User(BaseModel):
     avatar = Column(String(100), nullable=False)
     active = Column(Boolean, default=True)
     user_role = Column(Enum(UserRole), default=UserRole.USER)
-    ve = relationship('Ve', backref=backref('nhan_vien', lazy=True))
+    ve = relationship('Ve', backref='nhan_vien', lazy=True)
     ve_id = Column(Integer, ForeignKey('ve.id'), nullable=False)
     chuyenBay_id = Column(Integer, ForeignKey(ChuyenBay.id), nullable=False)
     def  __str__(self):
@@ -89,7 +89,7 @@ class User(BaseModel):
 
 class MayBay(BaseModel):
     name = Column(String(50), nullable=False)
-    hang_ve = relationship('HangVe', backref=backref('may_bay', lazy=True))
+    hang_ve = relationship('HangVe', backref='may_bay', lazy=True)
     def  __str__(self):
         return self.name
 
@@ -98,7 +98,7 @@ class HangVe(BaseModel):
     price = Column(Float, default=0)
     so_luong_con_lai = Column(Integer, default=80)
     mayBay_id = Column(Integer, ForeignKey(MayBay.id), nullable=False)
-    ve = relationship('Ve', backref=backref('hang_ve', lazy=True))
+    ve = relationship('Ve', backref='hang_ve', lazy=True)
     def  __str__(self):
         return self.name
 
@@ -108,7 +108,7 @@ class Ve(BaseModel):
     nhanVien_id = Column(Integer, ForeignKey(User.id), nullable=False)
     chuyenBay_id = Column(Integer, ForeignKey(ChuyenBay.id), nullable=False)
     hangVe_id = Column(Integer, ForeignKey(HangVe.id), nullable=False)
-    khachhang = relationship('KhachHang', backref=backref('ve', lazy=True))
+    khachhang = relationship('KhachHang', backref='ve', lazy=True)
 
     def __str__(self):
         return self.name
