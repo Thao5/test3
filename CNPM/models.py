@@ -4,6 +4,7 @@ from CNPM import db, app
 from flask_login import UserMixin
 from datetime import datetime
 from enum import Enum as UserEnum
+import datetime
 
 
 class UserRole(UserEnum):
@@ -40,8 +41,9 @@ class SanBay(BaseModel):
 
 
 class ThoiDiemBay(BaseModel):
-    thoi_gian_bay=Column(DateTime, nullable=False)
-    thoi_gian_dung=Column(DateTime, nullable=False)
+    ngay_gio_bay=Column(DateTime, nullable=False)
+    thoi_gian_bay=Column(DateTime, nullable=True)
+    thoi_gian_dung=Column(DateTime, nullable=True)
     chuyenbay=relationship('ChuyenBay', backref='thoi_diem_bay', lazy=True)
     def __str__(self):
         return self.name
@@ -128,3 +130,6 @@ class KhachHang(BaseModel):
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
+        tdb = ThoiDiemBay(ngay_gio_bay= datetime.datetime.now())
+        db.session.add(tdb)
+        db.session.commit()
