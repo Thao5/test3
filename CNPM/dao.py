@@ -1,8 +1,12 @@
-from CNPM.models import User
+from CNPM.models import ChuyenBay, TuyenBay, User, SanBay, ThoiDiemBay, MayBay, HangVe, Ve, KhachHang, ChuyenBayCoSanBayTrungGian, MayBayThuocChuyenBay, UserRole
 from flask_login import current_user
 from sqlalchemy import func #chua ham tinh tong,... trong sql
 from CNPM import db
 import hashlib
+
+
+def load_san_bay():
+    return SanBay.query.all()
 
 
 def auth_user(username, password):

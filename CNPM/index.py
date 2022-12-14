@@ -7,7 +7,11 @@ from CNPM.admin import *
 
 @app.route("/")
 def home():
-    return render_template('index.html')
+    list_san_bay = dao.load_san_bay()
+    diem_di= request.args.get('di')
+    diem_den= request.args.get('den')
+
+    return render_template('index.html', list_san_bay=list_san_bay)
 
 
 # @app.route('/search', methods=['get'])
