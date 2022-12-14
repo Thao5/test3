@@ -27,7 +27,7 @@ class AuthenticatedModalView(ModelView):
     can_export = True
     column_exclude_list = ['image']
     column_labels = {
-        'name': 'Tên'
+        'name': 'Name'
     }
     extra_js = ['//cdn.ckeditor.com/4.6.0/standard/ckeditor.js']
     form_overrides = {
