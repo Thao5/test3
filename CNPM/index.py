@@ -10,9 +10,9 @@ def home():
     return render_template('index.html')
 
 
-@app.route('/chuyenbay')
-def searchChuyenBay():
-    return render_template('search.html')
+# @app.route('/search', methods=['get'])
+# def searchChuyenBay():
+#     return render_template('search.html')
 
 
 @app.route('/banve')
