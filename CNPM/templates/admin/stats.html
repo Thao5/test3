@@ -1,0 +1,143 @@
+{% extends 'admin/base.html' %}
+
+{% block body %}
+<h1 class="text-center text-success">THÔNG KÊ VÀ BÁO CÁO</h1>
+
+<div class="row">
+    <div class="col-md-5 col-sm-12">
+        <table class="table">
+            <tr>
+                <th>Id</th>
+                <th>Tên Tuyến Bay</th>
+                <th>Doanh thu</th>
+                <th>Số lượt bay</th>
+                <th>Tỷ lệ</th>
+            </tr>
+            {% for s in stats %}
+            <tr>
+                <td>{{ s[0] }}</td>
+                <td>{{ s[1] }}</td>
+                <td>{{ "{:,.3f}".format(s[2]) }} VND</td>
+                <th>{{ s[3] }} lần</th>
+                <th>{{ "{:.2f}".format(100*(s[2]/s[4])) }}%</th>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    <div class="col-md-7 col-sm-12">
+        <form>
+            <select name="thoi_gian" id="loai_thoi_gian_id" class="selectpicker form-control" data-live-search="true"
+                    title="Chọn loại thời gian">
+                <option value="1" selected>Năm</option>
+                <option value="2">Tháng</option>
+                <option value="3">Quý</option>
+            </select>
+            <input type="text" id="so_lieu_input" name="so_lieu">
+            <input type="submit">
+            <select name="loai_bieu_do" id="bieu_do_id" class="selectpicker form-control" data-live-search="true"
+                    title="Chọn loại biểu đồ" onchange="thay_doi_bieu_do(this)">
+                <option value="1" selected>pie</option>
+                <option value="2">bar</option>
+                <option value="3">doughnut</option>
+                <option value="4">polarArea</option>
+            </select>
+            <!--            <div class="form-group">-->
+            <!--                <label>Từ ngày</label>-->
+            <!--                <input type="date" name="from_date" class="form-control"/>-->
+            <!--            </div>-->
+            <!--            <div class="form-group">-->
+            <!--                <label>Đến ngày</label>-->
+            <!--                <input type="date" name="to_date" class="form-control"/>-->
+            <!--            </div>-->
+        </form>
+        <canvas id="revenueStats"></canvas>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="{{ url_for('static', filename='js/my-chart.js') }}"></script>
+<script>
+    let labels = []
+    let data = []
+    let change = document.getElementById('bieu_do_id');
+    let type = change.options[change.selectedIndex].text;
+    {% for s in stats %}
+    labels.push('{{ s[1] }}')
+    data.push({{ s[2] }})
+    {% endfor %}
+    let myChart
+    const ctx = document.getElementById('revenueStats');
+    window.onload = function() {
+
+
+        myChart = new Chart(ctx, {
+            type: type,
+            data: {
+              labels: labels,
+              datasets: [{
+                label: 'Số lượt bay',
+                data: data,
+                borderWidth: 1,
+                backgroundColor: ['red', 'green', 'blue', 'rgba(198, 111, 90, 0.8)', 'rgba(255, 199, 120, 0.8)']
+              }]
+            },
+            options: {
+              scales: {
+                y: {
+                  beginAtZero: true
+                }
+              }
+            }
+          });
+    }
+
+
+
+
+    function thay_doi_bieu_do(obj){
+        myChart.destroy();
+        let change = document.getElementById('bieu_do_id');
+        let type = change.options[change.selectedIndex].text;
+        myChart = new Chart(ctx, {
+            type: type,
+            data: {
+              labels: labels,
+              datasets: [{
+                label: 'Số lượt bay',
+                data: data,
+                borderWidth: 1,
+                backgroundColor: ['red', 'green', 'blue', 'rgba(198, 111, 90, 0.8)', 'rgba(255, 199, 120, 0.8)']
+              }]
+            },
+            options: {
+              scales: {
+                y: {
+                  beginAtZero: true
+                }
+              }
+            }
+          });
+    };
+
+
+</script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css"
+      integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.3/dist/umd/popper.min.js"
+        integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/js/bootstrap.min.js"
+        integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+        crossorigin="anonymous"></script>
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
+<link rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/i18n/defaults-*.min.js"></script>
+<script src="{{ url_for('static', filename='js/dropdownlist.js') }}"></script>
+{% endblock %}

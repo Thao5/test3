@@ -1,11 +1,12 @@
 from CNPM.models import ChuyenBay, TuyenBay, User, SanBay, ThoiDiemBay, MayBay, HangVe, Ve, KhachHang, ChuyenBayCoSanBayTrungGian, MayBayThuocChuyenBay, UserRole
-from CNPM import db, app, admin
+from CNPM import db, app, dao
 from flask_admin import Admin, BaseView, expose, AdminIndexView
 from flask_admin.contrib.sqla import ModelView
 from flask_login import current_user, logout_user
-from flask import redirect
+from flask import redirect, request
 from wtforms import TextAreaField
 from wtforms.widgets import TextArea
+from datetime import datetime
 
 
 class CKTextAreaWidget(TextArea):
@@ -54,7 +55,19 @@ class LogoutView(AuthenticatedBaseView):
         return redirect('/admin')
 
 
+class StatsView(BaseView):
+    @expose('/')
+    def index(self):
+        year = request.args.get('so_lieu', datetime.now().year)
+        loai_thoi_gian = request.args.get('thoi_gian')
+        #stats = dao.tuyen_bay_count_stats(year=year)
+        stats = dao.tuyen_bay_month_doanh_thu_stats(year=year, loai_thoi_gian=loai_thoi_gian)
+        return self.render('admin/stats.html', stats=stats)
+    def is_accessible(self):
+        return current_user.is_authenticated and current_user.user_role == UserRole.ADMIN
 
+
+admin = Admin(app=app, name='QUẢN LÝ CHUYẾN BAY', template_mode='bootstrap4')
 admin.add_view(AuthenticatedModalViewAdmin(User, db.session, name='Người dùng'))
 admin.add_view(AuthenticatedModalViewAdmin(SanBay, db.session, name='Sân bay'))
 admin.add_view(AuthenticatedModalView(KhachHang, db.session, name='Khách hàng'))
@@ -65,12 +78,13 @@ admin.add_view(AuthenticatedModalView(TuyenBay, db.session, name='Tuyến bay'))
 admin.add_view(AuthenticatedModalView(HangVe, db.session, name='Hạng vé'))
 admin.add_view(AuthenticatedModalView(Ve, db.session, name='Vé'))
 
+admin.add_view(StatsView(name="Báo cáo thống kê"))
 admin.add_view(LogoutView(name="Đăng xuất"))
 # admin.add_view(ModelView(ChuyenBayCoSanBayTrungGian, db.session))
 # admin.add_view(ModelView(MayBayThuocChuyenBay, db.session))
 
 
-class StatsView(BaseView):
-    @expose('/')
-    def index(self):
-        return self.render('admin/stats.html')
+# class StatsView(BaseView):
+#     @expose('/')
+#     def index(self):
+#         return self.render('admin/stats.html')

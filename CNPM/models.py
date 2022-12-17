@@ -21,9 +21,6 @@ class BaseModel(db.Model):
 
 class TuyenBay(BaseModel):
     name = Column(String(50), nullable=False)
-    so_luot_bay= Column(Integer, default=0)
-    ty_le=Column(Float, default=0)
-    doanh_thu=Column(Float, default=0)
     chuyen_bay = relationship('ChuyenBay', backref='tuyen_bay', lazy=True)
 
     def __str__(self):
