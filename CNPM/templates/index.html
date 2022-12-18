@@ -10,15 +10,28 @@
      height: 100vh;>
     <div class="container">
         <div class="row">
-            <div class="col-lg-7 align-self-center text-lg-left text-center" style="">
-                <h1 class="mb-0 mt-4 display-4 text-center">ĐẶT VÉ MÁY BAY GIÁ RẺ</h1>
+            <div class="col-lg-7 align-self-center text-lg-left text-center" style="background-color:white;color:black">
+                <table class="table">
+                        <tr>
+                            <th>
+                                Tên Chuyến Bay
+                            </th>
+                        </tr>
+                        {% for cb in list_chuyen_bay %}
+                        <tr>
+                            <td>
+                                {{ cb.name }}
+                            </td>
+                            <td>
+                                <a href="{{ url_for('dat_ve', chuyenBay_id=cb.id) }}">Đặt vé</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                </table>
             </div>
             <div class="col-lg-5 p-3" style="">
                 <form class="p-4" method="get">
-                    <h4 class="mb-4 text-center" contenteditable="true" style="	border-color: none;">
-                        <mark class="secondary shadowed">ĐẶT VÉ MÁY BAY GIÁ RẺ</mark>
-                    </h4>
-                    <div class="form-group"><label>Điểm đi</label style="width:100%">
+                    <div class="form-group" style="width:100%"><label>Điểm đi</label>
                         <!--                        <select name="di" id="diem_di" data-live-search="true" class="selectpicker" class="form-control" title="chọn điểm đi">-->
                         <!--                            <option value="1">Mustard</option>-->
                         <!--                            <option value="2">Ketchup</option>-->
@@ -26,6 +39,7 @@
                         <!--                        </select>-->
                         <select name="di" id="diem_di" class="selectpicker form-control" data-live-search="true"
                                 title="Chọn điểm đi">
+                            <option value="all" selected>all</option>
                             {% for san_bay in list_san_bay %}
                             <option value="{{ san_bay.id }}">{{ san_bay.name }}</option>
                             {% endfor %}
@@ -35,6 +49,7 @@
                     <div class="form-group"><label>Điểm đến</label>
                         <select name="den" id="diem_den" class="selectpicker form-control" data-live-search="true"
                                 title="Chọn điểm đến">
+                            <option value="all" selected>all</option>
                             {% for san_bay in list_san_bay %}
                             <option value="{{ san_bay.id }}">{{ san_bay.name }}</option>
                             {% endfor %}
