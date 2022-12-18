@@ -108,7 +108,7 @@ class Ve(BaseModel):
     nhanVien_id = Column(Integer, ForeignKey(User.id), nullable=False)
     chuyenBay_id = Column(Integer, ForeignKey(ChuyenBay.id), nullable=False)
     hangVe_id = Column(Integer, ForeignKey(HangVe.id), nullable=False)
-    khachhang = relationship('KhachHang', backref='ve', lazy=True)
+    khachhang_id = Column(Integer, ForeignKey("khach_hang.id"), nullable=False)
 
     def __str__(self):
         return self.name
@@ -120,7 +120,7 @@ class KhachHang(BaseModel):
     cccd = Column(String(12), nullable=False)
     hinh_cccd = Column(String(100), nullable=False)
     sdt = Column(String(12), nullable=False)
-    ve_id = Column(Integer, ForeignKey(Ve.id), nullable=False)
+    ve = relationship('Ve', backref='khach_hang', lazy=True)
     chuyenBay_id = Column(Integer, ForeignKey(ChuyenBay.id), nullable=False)
 
     def __str__(self):
@@ -151,9 +151,10 @@ if __name__ == '__main__':
         hv1 = HangVe(name="Hạng 1", price=600, mayBay_id=mb.id)
         db.session.add_all([hv1])
         db.session.commit()
-        ve1 = Ve(name="Vé TP.HCM-HaNoi", nhanVien_id=u1.id, chuyenBay_id=cb1.id, hangVe_id=hv1.id)
-        db.session.add_all([ve1])
-        db.session.commit()
-        kh1 = KhachHang(name="Lộc", lastName="Trịnh Quang", cccd="123456789", hinh_cccd="sad", sdt="123456", ve_id=ve1.id, chuyenBay_id=cb1.id)
+        kh1 = KhachHang(name="Lộc", lastName="Trịnh Quang", cccd="123456789", hinh_cccd="sad", sdt="123456",
+                        chuyenBay_id=cb1.id)
         db.session.add_all([kh1])
+        db.session.commit()
+        ve1 = Ve(name="Vé TP.HCM-HaNoi", nhanVien_id=u1.id, chuyenBay_id=cb1.id, hangVe_id=hv1.id, khachhang_id=kh1.id)
+        db.session.add_all([ve1])
         db.session.commit()
