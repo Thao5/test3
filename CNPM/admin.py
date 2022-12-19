@@ -99,7 +99,7 @@ class LapLich(BaseView):
         tgs = request.args.getlist('tg')
         thoi_gian_dung = request.args.get('thoi_gian_dung')
 
-        # LapLich(name=ten_chuyen_bay, diem_di_id=diem_di_id, diem_den_id=den_id, ngay_gio=ngay_gio, thoi_gian_bay=thoi_gian_bay, hang1=hang1, hang2=hang2, tgs=tgs, thoi_gian_dung=thoi_gian_dung, tb_id=tb_id)
+        dao.LapLichChuyenBay(name=ten_chuyen_bay, diem_di_id=diem_di_id, diem_den_id=den_id, ngay_gio=ngay_gio, thoi_gian_bay=thoi_gian_bay, hang1=hang1, hang2=hang2, tgs=tgs, thoi_gian_dung=thoi_gian_dung, tb_id=tb_id)
 
         return self.render('admin/laplichchuyenbay.html', list_san_bay=list_san_bay, list_tuyen_bay=list_tuyen_bay)
     def is_accessible(self):
